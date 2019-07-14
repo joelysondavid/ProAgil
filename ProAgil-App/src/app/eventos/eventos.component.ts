@@ -8,7 +8,19 @@ import { HttpClient } from '@angular/common/http';
 })
 export class EventosComponent implements OnInit {
 
-  eventos: any ;
+  _filtroLista: string;
+  get filtroLista(): string {
+    return this._filtroLista;
+  }
+  set filtroLista(value: string) {
+    this._filtroLista = value;
+    this.eventosFiltrados = this.filtroLista ? this.filtrarEventos(this.filtroLista) : this.eventos;
+  }
+  eventosFiltrados: any[];
+  eventos: any = [];
+  imagemLargura = 50;
+  imagemMargem = 10;
+  mostrarImagem = false;
 
   constructor(private http: HttpClient) { }
 
@@ -16,10 +28,25 @@ export class EventosComponent implements OnInit {
     this.getEventos();
   }
 
+  filtrarEventos(filtrarPor: string): string {
+    filtrarPor = filtrarPor.toLocaleLowerCase();
+    return this.eventos.filter(
+      evento => evento.tema.toLocaleLowerCase().indexOf(filtrarPor) !== -1
+    ).concat(this.eventos.filter(
+      evento => evento.local.toLocaleLowerCase().indexOf(filtrarPor) !== -1
+    )).concat(this.eventos.filter(
+      evento => evento.dataEvento.toLocaleLowerCase().indexOf(filtrarPor) !== -1));
+  }
+
+  // função para mostrar ou nao a imagem
+  alternarImagem() {
+    this.mostrarImagem = !this.mostrarImagem;
+  }
+
   getEventos() {
     this.eventos = this.http.get('http://localhost:5000/api/values').subscribe(response => {
       this.eventos = response;
-      console.log(response)
+      console.log(response);
     }, error => {
       console.error(error);
     }
