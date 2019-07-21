@@ -1,19 +1,18 @@
 <div class="form-inline ">
     <div class="form-group mb-2">
         <label class="mr-2">Busca:</label><input type="text" class="form-control mr-2" placeholder="Buscar"
-        name="search"
-        [(ngModel)]="filtroLista"
-        > <!-- two-way Data Binding -->
+        name="search" [(ngModel)]="filtroLista"> <!-- two-way Data Binding -->
     </div>
 </div>
 <h5>Busca: {{filtroLista}} </h5>
 <table class="table table-striped table-dark">
     <thead class="thead-dark">
-      <tr>
-        <th>
-          <button class="btn btn-outline-primary"
-          (click)="alternarImagem()">Mostrar Imagem</button>
-        </th>
+        <tr>
+            <th>
+                <button class="btn btn-sm btn-outline-light" (click)="alternarImagem()" tooltip="Mostrar/Ocultar">
+                    <i class="{{mostrarImagem ? 'fa fa-eye-slash':'fa fa-eye'}}"></i>
+                </button>
+            </th>
             <th>#</th>
             <th>Tema</th>
             <th>Local</th>
@@ -25,24 +24,34 @@
     </thead>
     <tbody *ngIf="eventos && eventos.length">
         <tr *ngFor="let evento of eventosFiltrados">
-          <!-- todo *ng são diretivas estruturais -->
+            <!-- todo *ng são diretivas estruturais -->
             <td>
-                <img *ngIf="mostrarImagem" 
-                src="http://localhost:5000/img/{{evento.imagemURL}}"
-                [style.width.px]="imagemLargura"
-                [style.margin.px]="imagemMargem"
-                >  <!-- property binding -->
-               
+                <img *ngIf="mostrarImagem" src="http://localhost:5000/img/{{evento.imagemURL}}"
+                [style.width.px]="imagemLargura" [style.margin.px]="imagemMargem"> <!-- property binding -->
+                
             </td>
-            <td> {{evento.eventoId}} </td> <!-- interpolação -->
+            <td> {{evento.id}} </td> <!-- interpolação -->
             <td> {{evento.tema}} </td>
             <td> {{evento.local}} </td>
-            <td> {{evento.dataEvento}} </td>
+            <td> {{evento.dataEvento | DateTimeFormatPipe}} </td>
             <td> {{evento.qtdPessoas}} </td>
-            <td> {{evento.lote | uppercase}} </td>
             <td>
-                <button class="btn btn-success"></button>
-                <button class="btn btn-danger"></button>
+                <div *ngIf="!evento.lotes.length">
+                    Não informado!
+                </div>
+                <div *ngIf="evento.lotes.length">
+                    {{evento.lotes[0].nome | uppercase}}
+                </div>
+            </td>
+            <td>
+                <div class="btn-group">
+                    <button class="btn btn-sm btn-outline-primary" tooltip="Editar" (click)="openModal(template)">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" tooltip="Excluir">
+                        <i class="fa fa-eraser"></i>
+                    </button>
+                </div>
             </td>
         </tr>
     </tbody>
@@ -54,3 +63,14 @@
         </tr>
     </tfoot>
 </table>
+<ng-template #template>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">Modal</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        This is a modal.
+    </div>
+</ng-template>

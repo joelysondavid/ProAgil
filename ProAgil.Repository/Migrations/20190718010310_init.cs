@@ -51,7 +51,7 @@ namespace ProAgil.Repository.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Nome = table.Column<string>(nullable: true),
                     Preco = table.Column<decimal>(nullable: false),
-                    DataInicil = table.Column<DateTime>(nullable: true),
+                    DataInicio = table.Column<DateTime>(nullable: true),
                     DataFim = table.Column<DateTime>(nullable: true),
                     Qauntidade = table.Column<int>(nullable: false),
                     EventoId = table.Column<int>(nullable: false)

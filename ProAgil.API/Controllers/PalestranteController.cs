@@ -80,18 +80,16 @@ namespace ProAgil.API.Controllers
             return BadRequest();
         }
         // método para alterar um palestrante
-        [HttpPut("{PalestranteId}")]
-        public async Task<IActionResult> Put(int PalestranteId, Palestrante model)
+        [HttpPut("{palestranteId}")]
+        public async Task<IActionResult> Put(int palestranteId, Palestrante model)
         {
             try
             {
-                var palestrante = await _repo.GetPalestranteAsyncById(PalestranteId, false);
-                if (palestrante == null)
-                {
-                    return NotFound();
-                }
+                var palestrante = await _repo.GetPalestranteAsyncById(palestranteId, false);
+                if (palestrante == null) return NotFound();
+                model.Id = palestranteId;
                 _repo.Update(model);
-                if(await _repo.SaveChangesAsync()){
+                if(await _repo.SaveChangesAsync()) {
                     return Created($"/api/palestrante/{model.Id}", model);
                 }
             }

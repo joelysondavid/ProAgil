@@ -86,15 +86,16 @@ namespace ProAgil.API.Controllers
         }
 
         // atualiza um evento
-        [HttpPut("{EventoId}")]
-        public async Task<IActionResult> Put(int EventoId, Evento model)
+        [HttpPut("{eventoId}")]
+        public async Task<IActionResult> Put(int eventoId, Evento model)
         {
             try
             {
-                var evento = await _repo.GetEventosAsyncById(EventoId, false);
-                if (evento == null) return NotFound();
-
-                _repo.Update(model);
+                // cria um objeto evento recebendo id
+                var evento = await _repo.GetEventosAsyncById(eventoId, false);
+                if (evento == null) return NotFound(); // se id for nulo retorna 404
+                model.Id = eventoId; // pega o id da rota e passa para o modelo
+                _repo.Update(model); // salva o modelo
                  if (await _repo.SaveChangesAsync())
                 {
                     return Created($"/api/evento/{model.Id}", model);
