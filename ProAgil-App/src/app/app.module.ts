@@ -14,6 +14,8 @@ import { EventosComponent } from './eventos/eventos.component';
 import { NavComponent } from './nav/nav.component';
 // pipe
 import { DateTimeFormatPipePipe } from './_helps/DateTimeFormatPipe.pipe';
+import { DatepickerModule, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 
 @NgModule({
@@ -30,6 +32,9 @@ import { DateTimeFormatPipePipe } from './_helps/DateTimeFormatPipe.pipe';
       FormsModule,
       Ng2SearchPipeModule, // modulo para filtro
       BsDropdownModule.forRoot(),
+      BsDatepickerModule.forRoot(),
+      DatepickerModule.forRoot(),
+      BrowserAnimationsModule,
       TooltipModule.forRoot(),
       ModalModule.forRoot(),
       ReactiveFormsModule

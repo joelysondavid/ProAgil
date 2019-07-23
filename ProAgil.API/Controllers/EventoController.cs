@@ -110,7 +110,7 @@ namespace ProAgil.API.Controllers
 
         // deletando evento
         [HttpDelete("{eventoId}")]
-        public async Task<IActionResult> Delete(int eventoId, Evento model)
+        public async Task<IActionResult> Delete(int eventoId)
         {
             try
             {
@@ -123,7 +123,7 @@ namespace ProAgil.API.Controllers
                 _repo.Delete(evento);
                 if (await _repo.SaveChangesAsync())
                 {
-                    return Ok("Deletado com sucesso!");
+                    return Ok();
                 }
             }
             catch (System.Exception)
