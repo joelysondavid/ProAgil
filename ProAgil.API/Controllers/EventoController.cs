@@ -100,7 +100,7 @@ namespace ProAgil.API.Controllers
 
         // atualiza um evento
         [HttpPut("{eventoId}")]
-        public async Task<IActionResult> Put(int eventoId, Evento model)
+        public async Task<IActionResult> Put(int eventoId, EventoDto model)
         {
             try
             {
@@ -108,8 +108,8 @@ namespace ProAgil.API.Controllers
                 var evento = await _repo.GetEventosAsyncById(eventoId, false);
                 if (evento == null) return NotFound(); // se id for nulo retorna 404
                 _mapper.Map(model, evento);
-
-                model.Id = eventoId; // pega o id da rota e passa para o modelo
+                
+               // model.Id = eventoId; // pega o id da rota e passa para o modelo
                 _repo.Update(evento); // salva o modelo
                 if (await _repo.SaveChangesAsync())
                 {

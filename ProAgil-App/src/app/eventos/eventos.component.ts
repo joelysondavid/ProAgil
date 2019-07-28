@@ -6,6 +6,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { defineLocale, BsLocaleService, ptBrLocale } from 'ngx-bootstrap';
 import { TouchSequence } from 'selenium-webdriver';
 import { templateJitUrl } from '@angular/compiler';
+import { ToastrService } from 'ngx-toastr';
 defineLocale('pt-br', ptBrLocale);
 
 @Component({
@@ -33,6 +34,7 @@ export class EventosComponent implements OnInit {
     , private modalService: BsModalService
     , private fb: FormBuilder
     , private localeService: BsLocaleService
+    , private toastr: ToastrService
     ) {
       this.localeService.use('pt-br');
       }
@@ -72,7 +74,9 @@ confirmeDelete(template: any) {
       () => {
           template.hide();
           this.getEventos();
+          this.toastr.success('Evento deletado com sucesso!');
         }, error => {
+          this.toastr.error(`Erro ao tentar deletar evento: ${this.evento.tema}, Código: ${this.evento.id}!`);
           console.log(error);
         }
     );
@@ -122,7 +126,9 @@ confirmeDelete(template: any) {
           (novoEvento: Evento) => {
             template.hide();
             this.getEventos();
+            this.toastr.success('Evento Inserido com sucesso!');
           }, error => {
+            this.toastr.error(`Erro ao inserir evento!`);
             console.log(error);
           }
         );
@@ -132,7 +138,9 @@ confirmeDelete(template: any) {
           () => {
             template.hide();
             this.getEventos();
+            this.toastr.success('Evento atualizado com sucesso!');
           }, error => {
+            this.toastr.error(`Erro ao tentar atualizar evento: ${this.evento.tema}, Código: ${this.evento.id}!`);
             console.log(error);
           }
         );
@@ -145,9 +153,8 @@ confirmeDelete(template: any) {
       (_eventos: Evento[]) => {
       this.eventos = _eventos;
       this.eventosFiltrados = this.eventos;
-      console.log(_eventos);
     }, error => {
-      console.error(error);
+      this.toastr.error(`Erro ao tentar carregar eventos: ${error}`);
     }
     );
   }
