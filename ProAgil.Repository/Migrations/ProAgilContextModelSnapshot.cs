@@ -55,7 +55,7 @@ namespace ProAgil.Repository.Migrations
 
                     b.Property<decimal>("Preco");
 
-                    b.Property<int>("Qauntidade");
+                    b.Property<int>("Quantidade");
 
                     b.HasKey("Id");
 

@@ -47,10 +47,10 @@ export class EventosComponent implements OnInit {
 
   // editar evento
   editarEvento(evento: Evento, template: any) {
-    this.modoSalvar = 'put';
-    this.openModal(template);
-    this.evento = evento;
-    this.registerForm.patchValue(evento);
+    this.modoSalvar = 'put'; // flag para editar
+    this.openModal(template); // abri o modal
+    this.evento = evento; // passa os valores do evento clicado para o objeto local
+    this.registerForm.patchValue(evento); // carrega os dados do evento para o modal
     console.log(this.modoSalvar);
   }
   // novo evento
