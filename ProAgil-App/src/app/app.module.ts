@@ -11,20 +11,29 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 // componentes
 import { AppComponent } from './app.component';
-import { EventosComponent } from './eventos/eventos.component';
 import { NavComponent } from './nav/nav.component';
+import { EventosComponent } from './eventos/eventos.component';
+import { PalestrantesComponent } from './palestrantes/palestrantes.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { ContatosComponent } from './contatos/contatos.component';
+import { TituloComponent } from './_shared/titulo/titulo.component';
 // pipe
 import { DateTimeFormatPipePipe } from './_helps/DateTimeFormatPipe.pipe';
 import { DatepickerModule, BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { ToastrModule } from 'ngx-toastr';
+import { EventoService } from './_services/evento.service';
 
 @NgModule({
    declarations: [
       AppComponent,
-      EventosComponent,
       NavComponent,
+      EventosComponent,
+      PalestrantesComponent,
+      DashboardComponent,
+      ContatosComponent,
+      TituloComponent,
       DateTimeFormatPipePipe
    ],
    imports: [
@@ -32,17 +41,19 @@ import { ToastrModule } from 'ngx-toastr';
       AppRoutingModule,
       HttpClientModule,
       FormsModule,
-      Ng2SearchPipeModule, // modulo para filtro
-      BsDropdownModule.forRoot(),
+      Ng2SearchPipeModule,
+      // moduloparafiltro\\\\nBsDropdownModule.forRoot(),
       BsDatepickerModule.forRoot(),
       DatepickerModule.forRoot(),
       BrowserAnimationsModule,
-      ToastrModule.forRoot(), // ToastrModule added
-      TooltipModule.forRoot(),
+      ToastrModule.forRoot(),
+      // ToastrModuleadded\\\\nTooltipModule.forRoot(),
       ModalModule.forRoot(),
-      ReactiveFormsModule,
+      ReactiveFormsModule
    ],
-   providers: [],
+   providers: [
+      EventoService
+   ],
    bootstrap: [
       AppComponent
    ]

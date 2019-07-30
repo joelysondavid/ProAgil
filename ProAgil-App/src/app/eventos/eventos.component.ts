@@ -7,6 +7,7 @@ import { defineLocale, BsLocaleService, ptBrLocale } from 'ngx-bootstrap';
 import { TouchSequence } from 'selenium-webdriver';
 import { templateJitUrl } from '@angular/compiler';
 import { ToastrService } from 'ngx-toastr';
+import { DateTimeFormatPipePipe } from '../_helps/DateTimeFormatPipe.pipe';
 defineLocale('pt-br', ptBrLocale);
 
 @Component({
@@ -15,6 +16,8 @@ defineLocale('pt-br', ptBrLocale);
   styleUrls: ['./eventos.component.css']
 })
 export class EventosComponent implements OnInit {
+
+  titulo = 'Eventos';
 
   eventosFiltrados: Evento[];
   eventos: Evento[];
@@ -52,6 +55,7 @@ export class EventosComponent implements OnInit {
     this.modoSalvar = 'put'; // flag para editar
     this.openModal(template); // abri o modal
     this.evento = evento; // passa os valores do evento clicado para o objeto local
+    console.log(evento.dataEvento);
     this.registerForm.patchValue(evento); // carrega os dados do evento para o modal
     console.log(this.modoSalvar);
   }
