@@ -1,4 +1,4 @@
-<app-titulo [titulo]="titulo" ></app-titulo>
+<app-titulo [titulo]="titulo"></app-titulo>
 <div class="d-flex">
     <div class="form-inline mr-auto">
         <div class="form-group mb-2">
@@ -35,7 +35,7 @@
         <tr *ngFor="let evento of eventosFiltrados" style="height: 80px">
             <!-- todo *ng são diretivas estruturais -->
             <td style="width: 100px">
-                <img *ngIf="mostrarImagem" src="http://localhost:5000/img/{{evento.imagemURL}}"
+                <img *ngIf="mostrarImagem" src="http://localhost:5000/resources/images/{{evento.imagemURL}}?_ts={{dataAtual}}"
                     [style.width.px]="imagemLargura" [style.margin.px]="imagemMargem"> <!-- property binding -->
 
             </td>
@@ -79,7 +79,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 id="dialog-sizes-name1" class="modal-title pull-left">Large modal</h4>
+                <h4 id="dialog-sizes-name1" class="modal-title pull-left">{{edit}}</h4>
                 <button type="button" class="close pull-right" (click)="template.hide()" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -120,9 +120,8 @@
                         </div>
                         <div class="form-group col-md-4">
                             <label>Data e Hora</label>
-                            <input type="text" class="form-control" 
-                                bsDatepicker
-                                [(ngModel)]="dataEvento" value="{{dataEvento | DateTimeFormatPipe}}"
+                            <input type="text" class="form-control" bsDatepicker
+                                value="{{dataEvento | DateTimeFormatPipe}}" [(ngModel)]="dataEvento"
                                 [bsConfig]="{ dateInputFormat: 'DD/MM/YYYY hh:mm' }" [ngClass]="{'is-invalid': registerForm.get('dataEvento').errors
                                 && registerForm.get('dataEvento').touched}" formControlName="dataEvento"
                                 placeholder="Informe a data do evento">
@@ -151,9 +150,20 @@
                         </div>
                         <div class="form-group col-md-6" style="height: 75px">
                             <label>Imagem</label>
-                            <input type="text"
-                                [ngClass]="{'is-invalid': registerForm.get('imagemURL').errors && registerForm.get('imagemURL').touched}"
-                                class="form-control" formControlName="imagemURL" placeholder="Insira uma imagem">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <button class="btn btn-outline-primary" (click)="file.click()">
+                                            Enviar imagem
+                                        </button>
+                                        <input type="file" #file
+                                            [ngClass]="{'is-invalid': registerForm.get('imagemURL').errors && registerForm.get('imagemURL').touched}"
+                                            (change)="onFileChange($event)" class="form-control"
+                                            formControlName="imagemURL" placeholder="Insira uma imagem"
+                                            style="display: none">
+                                    </td>
+                                </tr>
+                            </table>
                             <div *ngIf="registerForm.get('imagemURL').hasError('required') 
                                 && registerForm.get('imagemURL').touched" class="invalid-feedback">
                                 A imagem do evento é obrigatório!

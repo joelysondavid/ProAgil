@@ -31,6 +31,12 @@ export class EventosComponent implements OnInit {
   _filtroLista = '';
   registerForm: FormGroup;
   bodyDeletarEvento = '';
+  edit = '';
+
+  dataAtual: string;
+
+  file: File;
+  fileNameToUpdate: any;
 
   constructor(
       private eventoService: EventoService
@@ -54,16 +60,19 @@ export class EventosComponent implements OnInit {
   editarEvento(evento: Evento, template: any) {
     this.modoSalvar = 'put'; // flag para editar
     this.openModal(template); // abri o modal
-    this.evento = evento; // passa os valores do evento clicado para o objeto local
-    console.log(evento.dataEvento);
-    this.registerForm.patchValue(evento); // carrega os dados do evento para o modal
-    console.log(this.modoSalvar);
+    this.evento = Object.assign({}, evento); // passa os valores do evento clicado para o objeto local
+    console.log(evento);
+    this.fileNameToUpdate = this.evento.imagemURL.toString();
+    this.evento.imagemURL = ''; // seta url da imagem para não dar problema ao carregar as informações
+    this.mostrar();
+    this.registerForm.patchValue(this.evento); // carrega os dados do evento para o modal
+    // console.log(this.modoSalvar);
   }
   // novo evento
   novoEvento(template: any) {
     this.modoSalvar = 'post';
     this.openModal(template);
-    console.log(this.modoSalvar);
+    // console.log(this.modoSalvar);
   }
 
 
@@ -72,7 +81,9 @@ excluirEvento(evento: Evento, template: any) {
     this.evento = evento;
     this.bodyDeletarEvento = `Tem certeza que deseja excluir o Evento: ${evento.tema}, Código: ${evento.id}`;
 }
-
+mostrar() {
+  this.edit = `Atualiza evento: ${this.evento.tema}, Cód.: ${this.evento.id}`;
+}
 confirmeDelete(template: any) {
     this.eventoService.deleteEvento(this.evento.id).subscribe(
       () => {
@@ -115,17 +126,51 @@ confirmeDelete(template: any) {
       local: ['', Validators.required],
       dataEvento: ['', Validators.required],
       imagemURL: ['', Validators.required],
-      qtdPessoas: ['',
-      [Validators.required, Validators.max(120000)]],
+      qtdPessoas: ['', [Validators.required, Validators.max(120000)]],
       telefone: ['', Validators.required],
-      email: ['',
-      [Validators.required, Validators.email]]
+      email: ['', [Validators.required, Validators.email]]
     });
   }
+
+  onFileChange(event) {
+    // letor de arquivo
+    const reader = new FileReader();
+
+    if(event.target.files && event.target.files.length) {
+      this.file = event.target.files;
+      console.log(this.file);
+    }
+  }
+
+  uploadImagem() {
+    if(this.modoSalvar === 'post') {// chamando upload
+      const nomeArquivo = this.evento.imagemURL.split('\\', 3);
+      
+      this.evento.imagemURL = nomeArquivo[2];
+      this.eventoService.postUpload(this.file, nomeArquivo[2]).subscribe(
+        () => {
+          this.dataAtual = new Date().getMilliseconds.toString();
+          this.getEventos();
+        }
+      );
+    } else {
+      this.evento.imagemURL = this.fileNameToUpdate;
+      this.eventoService.postUpload(this.file, this.fileNameToUpdate).subscribe(
+        () => {
+          this.dataAtual = new Date().getMilliseconds.toString();
+          this.getEventos();
+        }
+      );
+    }
+}
+
   salvarAlteracao(template: any) {
     if (this.registerForm.valid){
       if(this.modoSalvar === 'post') {
         this.evento = Object.assign({}, this.registerForm.value);
+
+        this.uploadImagem();
+
         this.eventoService.postEvento(this.evento).subscribe(
           (novoEvento: Evento) => {
             template.hide();
@@ -138,6 +183,9 @@ confirmeDelete(template: any) {
         );
       } else {
         this.evento = Object.assign({id: this.evento.id}, this.registerForm.value);
+
+        this.uploadImagem();
+
         this.eventoService.putEvento(this.evento).subscribe(
           () => {
             template.hide();
