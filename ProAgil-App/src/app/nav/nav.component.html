@@ -6,7 +6,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <div class="collapse navbar-collapse" id="navbarColor01">
+        <div *ngIf="loggedIn()" class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item" routerLinkActive="active">
                     <a class="nav-link" routerLink="eventos">Eventos</a>
@@ -19,22 +19,25 @@
                 </li>
             </ul>
         </div>
-        <ul class="navbar-nav">
+        <ul class="navbar-nav" *ngIf="loggedIn()">
             <li class="nav-item dropdown" dropdown>
-                <a dropdownToggle class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    User
+                <a dropdownToggle class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false" style="cursor: pointer">
+                    {{authService.decodeToken?.unique_name}}
                 </a>
                 <div *dropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" style="cursor: pointer">
                         Perfil
                     </a>
                     <div role="separator" class="divider"></div>
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" (click)='logout()' style="cursor: pointer">
                         Sair
                     </a>
                 </div>
             </li>
         </ul>
+
+        <button  *ngIf="!loggedIn()" class="btn btn-outline-primary" (click)='enter()'>Entrar</button>
+
     </div>
 </nav>

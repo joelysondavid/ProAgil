@@ -1,7 +1,7 @@
 // modulos
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Ng2SearchPipeModule } from 'ng2-search-filter'; // Importação para utilizar filtro em todos os camppos da tabela
 import { AppRoutingModule } from './app-routing.module';
@@ -25,6 +25,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { EventoService } from './_services/evento.service';
 
+import { UserComponent } from './User/User.component';
+// componentes internos de user
+import { LoginComponent } from './user/login/login.component';
+import { RegistrationComponent } from './user/registration/registration.component';
+import { AuthInterceptor } from './auth/auth.inserceptor';
+
 @NgModule({
    declarations: [
       AppComponent,
@@ -34,25 +40,39 @@ import { EventoService } from './_services/evento.service';
       DashboardComponent,
       ContatosComponent,
       TituloComponent,
+      UserComponent,
+      LoginComponent,
+      RegistrationComponent,
       DateTimeFormatPipePipe
    ],
    imports: [
       BrowserModule,
+      //moduloparafiltro
+      Ng2SearchPipeModule,
+      BsDropdownModule.forRoot(),
+      BsDatepickerModule.forRoot(),
+      TooltipModule.forRoot(),
+      //ToastrModuleadded\\\\\\\\\\\\\\\\nTooltipModule.forRoot(),
+      ModalModule.forRoot(),
+      BrowserAnimationsModule,
+      ToastrModule.forRoot({
+         timeOut: 3000,
+         preventDuplicates: true,
+         progressBar: true
+      }),
       AppRoutingModule,
       HttpClientModule,
       FormsModule,
-      Ng2SearchPipeModule,
-      // moduloparafiltro\\\\nBsDropdownModule.forRoot(),
-      BsDatepickerModule.forRoot(),
       DatepickerModule.forRoot(),
-      BrowserAnimationsModule,
-      ToastrModule.forRoot(),
-      // ToastrModuleadded\\\\nTooltipModule.forRoot(),
-      ModalModule.forRoot(),
       ReactiveFormsModule
    ],
    providers: [
-      EventoService
+      EventoService,
+      {
+         provide: HTTP_INTERCEPTORS,
+         useClass: AuthInterceptor,
+         multi: true
+      }
    ],
    bootstrap: [
       AppComponent
