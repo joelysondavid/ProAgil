@@ -8,6 +8,7 @@ import { TouchSequence } from 'selenium-webdriver';
 import { templateJitUrl } from '@angular/compiler';
 import { ToastrService } from 'ngx-toastr';
 import { DateTimeFormatPipePipe } from '../_helps/DateTimeFormatPipe.pipe';
+import { datepickerAnimation } from 'ngx-bootstrap/datepicker/datepicker-animations';
 defineLocale('pt-br', ptBrLocale);
 
 @Component({
@@ -21,7 +22,7 @@ export class EventosComponent implements OnInit {
 
   eventosFiltrados: Evento[];
   eventos: Evento[];
-  evento: Evento;
+  evento = new Evento();
   imagemLargura = 75;
   imagemMargem = 0;
   mostrarImagem = false;
@@ -31,7 +32,7 @@ export class EventosComponent implements OnInit {
   _filtroLista = '';
   registerForm: FormGroup;
   bodyDeletarEvento = '';
-  edit = '';
+  edit: string;
 
   dataAtual: string;
 
@@ -39,14 +40,14 @@ export class EventosComponent implements OnInit {
   fileNameToUpdate: any;
 
   constructor(
-      private eventoService: EventoService
+    private eventoService: EventoService
     , private modalService: BsModalService
     , private fb: FormBuilder
     , private localeService: BsLocaleService
     , private toastr: ToastrService
-    ) {
-      this.localeService.use('pt-br');
-      }
+  ) {
+    this.localeService.use('pt-br');
+  }
 
   get filtroLista(): string {
     return this._filtroLista;
@@ -60,42 +61,43 @@ export class EventosComponent implements OnInit {
   editarEvento(evento: Evento, template: any) {
     this.modoSalvar = 'put'; // flag para editar
     this.openModal(template); // abri o modal
+    this.mostrar();
     this.evento = Object.assign({}, evento); // passa os valores do evento clicado para o objeto local
-    console.log(evento);
     this.fileNameToUpdate = this.evento.imagemURL.toString();
     this.evento.imagemURL = ''; // seta url da imagem para não dar problema ao carregar as informações
-    this.mostrar();
-    this.registerForm.patchValue(this.evento); // carrega os dados do evento para o modal
+    this.registerForm.patchValue(this.evento); // passa os dados do objeto e coloca no modal
+    this.edit = `Evento: ${this.evento.tema}, Cód.: ${this.evento.id}`;
     // console.log(this.modoSalvar);
   }
   // novo evento
   novoEvento(template: any) {
     this.modoSalvar = 'post';
+    this.edit = 'Novo Evento';
     this.openModal(template);
     // console.log(this.modoSalvar);
   }
 
 
-excluirEvento(evento: Evento, template: any) {
+  excluirEvento(evento: Evento, template: any) {
     this.openModal(template);
     this.evento = evento;
     this.bodyDeletarEvento = `Tem certeza que deseja excluir o Evento: ${evento.tema}, Código: ${evento.id}`;
-}
-mostrar() {
-  this.edit = `Atualiza evento: ${this.evento.tema}, Cód.: ${this.evento.id}`;
-}
-confirmeDelete(template: any) {
+  }
+  mostrar() {
+
+  }
+  confirmeDelete(template: any) {
     this.eventoService.deleteEvento(this.evento.id).subscribe(
       () => {
-          template.hide();
-          this.getEventos();
-          this.toastr.success('Evento deletado com sucesso!');
-        }, error => {
-          this.toastr.error(`Erro ao tentar deletar evento: ${this.evento.tema}, Código: ${this.evento.id}!`);
-          console.log(error);
-        }
+        template.hide();
+        this.getEventos();
+        this.toastr.success('Evento deletado com sucesso!');
+      }, error => {
+        this.toastr.error(`Erro ao tentar deletar evento: ${this.evento.tema}, Código: ${this.evento.id}!`);
+        console.log(error);
+      }
     );
-}
+  }
 
   // metodo para mostrar o templete do modal
   openModal(template: any) {
@@ -136,16 +138,16 @@ confirmeDelete(template: any) {
     // letor de arquivo
     const reader = new FileReader();
 
-    if(event.target.files && event.target.files.length) {
+    if (event.target.files && event.target.files.length) {
       this.file = event.target.files;
       console.log(this.file);
     }
   }
 
   uploadImagem() {
-    if(this.modoSalvar === 'post') {// chamando upload
+    if (this.modoSalvar === 'post') {// chamando upload
       const nomeArquivo = this.evento.imagemURL.split('\\', 3);
-      
+
       this.evento.imagemURL = nomeArquivo[2];
       this.eventoService.postUpload(this.file, nomeArquivo[2]).subscribe(
         () => {
@@ -162,11 +164,11 @@ confirmeDelete(template: any) {
         }
       );
     }
-}
+  }
 
   salvarAlteracao(template: any) {
-    if (this.registerForm.valid){
-      if(this.modoSalvar === 'post') {
+    if (this.registerForm.valid) {
+      if (this.modoSalvar === 'post') {
         this.evento = Object.assign({}, this.registerForm.value);
 
         this.uploadImagem();
@@ -182,7 +184,7 @@ confirmeDelete(template: any) {
           }
         );
       } else {
-        this.evento = Object.assign({id: this.evento.id}, this.registerForm.value);
+        this.evento = Object.assign({ id: this.evento.id }, this.registerForm.value);
 
         this.uploadImagem();
 
@@ -197,17 +199,18 @@ confirmeDelete(template: any) {
           }
         );
       }
-      }
+    }
   }
 
   getEventos() {
+    this.dataAtual = new Date().getMilliseconds().toString();
     this.eventoService.getAllEventos().subscribe(
       (_eventos: Evento[]) => {
-      this.eventos = _eventos;
-      this.eventosFiltrados = this.eventos;
-    }, error => {
-      this.toastr.error(`Erro ao tentar carregar eventos: ${error}`);
-    }
+        this.eventos = _eventos;
+        this.eventosFiltrados = this.eventos;
+      }, error => {
+        this.toastr.error(`Erro ao tentar carregar eventos: ${error}`);
+      }
     );
   }
 }

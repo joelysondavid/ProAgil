@@ -10,6 +10,8 @@ namespace ProAgil.Repository
         void Add<T>(T entity) where T: class;  // adicionar vai receber uma entidade onde 'T' será uma classe
         void Update<T>(T entity) where T: class;
         void Delete<T>(T entity) where T: class;
+
+        void DeleteRange<T> (T[] entity) where T : class;
         Task<bool> SaveChangesAsync();
 
         // Eventos 

@@ -24,6 +24,8 @@
     "bootstrap": "^4.3.1",
     "ng2-search-filter": "^0.5.1",
     "ngx-bootstrap": "^5.1.0",
+    "ngx-currency": "^2.0.0",
+    "ngx-mask": "^8.0.2",
     "ngx-toastr": "^10.0.4",
     "rxjs": "~6.4.0",
     "tslib": "^1.9.0",

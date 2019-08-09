@@ -28,14 +28,15 @@
             <th>Data</th>
             <th>Qtd Pessoas</th>
             <th>Lote</th>
-            <th>Opções</th>
+            <th colspan="2">Opções</th>
         </tr>
     </thead>
     <tbody *ngIf="eventos && eventos.length">
         <tr *ngFor="let evento of eventosFiltrados" style="height: 80px">
             <!-- todo *ng são diretivas estruturais -->
             <td style="width: 100px">
-                <img *ngIf="mostrarImagem" src="http://localhost:5000/resources/images/{{evento.imagemURL}}?_ts={{dataAtual}}"
+                <img *ngIf="mostrarImagem"
+                    src="http://localhost:5000/resources/images/{{evento.imagemURL}}?_ts={{dataAtual}}"
                     [style.width.px]="imagemLargura" [style.margin.px]="imagemMargem"> <!-- property binding -->
 
             </td>
@@ -64,6 +65,12 @@
                     </button>
                 </div>
             </td>
+            <td>
+                <a [routerLink]="['/evento', evento.id, 'edit']" class="btn btn-sm btn-outline-warning"
+                    tooltip="Exibição detalhada">
+                    <i class="fa fa-edit"></i>
+                </a>
+            </td>
         </tr>
     </tbody>
     <tfoot *ngIf="!eventos">
@@ -76,7 +83,7 @@
 </table>
 
 <div bsModal #template="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-sizes-name1">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 id="dialog-sizes-name1" class="modal-title pull-left">{{edit}}</h4>
@@ -85,7 +92,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!-- form -->
+                <!-- modal -->
                 <form [formGroup]="registerForm">
                     <div class="form-row">
                         <div class="form-group col-md-12" style="height: 75px">
