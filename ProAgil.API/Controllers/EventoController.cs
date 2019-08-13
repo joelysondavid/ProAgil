@@ -142,22 +142,26 @@ namespace ProAgil.API.Controllers
                 // cria um objeto evento recebendo id
                 var evento = await _repo.GetEventosAsyncById(eventoId, false);
                 if (evento == null) return NotFound(); // se id for nulo retorna 404
-                
+
                 var idLotes = new List<int>();
                 var idRedesSociais = new List<int>();
 
-                // verifica os lotes e redes que foram passados
-                model.Lotes.ForEach(item => idLotes.Add(item.Id));
-                model.RedesSociais.ForEach(item => idRedesSociais.Add(item.Id));
-                
-                // procura os lotes passados
-                var lotes = evento.Lotes.Where(lote => !idLotes.Contains(lote.Id)).ToArray();
-                // procura pelas redes sociais informadas
-                var redesSociais = evento.RedesSociais.Where(redeSocial => !idRedesSociais.Contains(redeSocial.Id)).ToArray();
 
-                if(lotes.Length > 0) _repo.DeleteRange(lotes); // deleta os lotes não encontrados
-                if(redesSociais.Length > 0) _repo.DeleteRange(redesSociais); // deleta os lotes não encontrados
-
+                if (idLotes.Count != 0)
+                {
+                    // verifica os lotes e redes que foram passados
+                    model.Lotes.ForEach(item => idLotes.Add(item.Id));
+                    // procura os lotes passados
+                    var lotes = evento.Lotes.Where(lote => !idLotes.Contains(lote.Id)).ToArray();
+                    if (lotes.Length > 0) _repo.DeleteRange(lotes); // deleta os lotes não encontrados
+                }
+                if (idRedesSociais.Count != 0)
+                {
+                    model.RedesSociais.ForEach(item => idRedesSociais.Add(item.Id));
+                    // procura pelas redes sociais informadas
+                    var redesSociais = evento.RedesSociais.Where(redeSocial => !idRedesSociais.Contains(redeSocial.Id)).ToArray();
+                    if (redesSociais.Length > 0) _repo.DeleteRange(redesSociais); // deleta os lotes não encontrados
+                }
 
                 _mapper.Map(model, evento);
 
