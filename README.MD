@@ -11,6 +11,6 @@
     - "cd .\ProAgil.Repository\" (Note que será necessário alterar as config no appsettings.json e no appsetings.development.json).
     - No diretório utilize o seguinte comando: "dotnet ef --startup-project ..\ProAgil.API\ database update"
     caso haja algum erro na geração do banco como "error 40" será necessário ativar os pipes com gerenciador de banco do SQL Server: 
-    - .[Link].(https://stackoverflow.com/questions/9945409/how-do-i-fix-the-error-named-pipes-provider-error-40-could-not-open-a-connec)
+    - [Link](https://stackoverflow.com/questions/9945409/how-do-i-fix-the-error-named-pipes-provider-error-40-could-not-open-a-connec)
 
 
